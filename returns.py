@@ -17,6 +17,7 @@ quantity       = 0
 packagingUnit  = 0
 weight         = 0
 weightUnit     = 0
+marksAndNumbers = 0
 
 def processed_yet(consignee):
     new = False
@@ -38,9 +39,11 @@ def define_labels(line):
         "Quantity",
         "Packaging Unit",
         "Net Weight",
-        "Weight Unit"
+        "Weight Unit",
+        "Shipment ID"
         ]
 
+    global marksAndNumbers
     global name
     global addressLine
     global city
@@ -56,8 +59,6 @@ def define_labels(line):
     for part in line:
         for label in labels:
             if part == label:
-                #print(part)
-                #print(str(line.index(part)))
                 if part == "Consignee Name":
                     name = line.index(part)
                 if part == "Consignee Address1":
@@ -74,24 +75,13 @@ def define_labels(line):
                 if part == "Quantity":
                     quantity = line.index(part)
                 if part == "Packaging Unit":
-                    packagingUnit = line.index(part)
+                    packagingUnit = line.index(part) # Unused?
                 if part == "Net Weight":
                     weight = line.index(part)
                 if part == "Weight Unit":
                     weightUnit = line.index(part) #Unused. Always "LBR"
-    '''
-    print("name at: " + str(name))
-    print("addressLine at: " + str(addressLine))
-    print("city at: " + str(city))
-    print("province at: " + str(stateProvince))
-    print("postal code at: " + str(postalcode))
-
-    print("description at: " + str(description))
-    print("quantity at: " + str(quantity))
-    print("packaging unit at: " + str(packagingUnit))
-    print("net weight at: " + str(weight))
-    print("weight unit at: " + str(weightUnit))
-    '''
+                if part == "Shipment ID":
+                    marksAndNumbers = line.index(part)
          
 #BEGIN
 
@@ -101,18 +91,32 @@ for arg in sys.argv[1:]:
         sys.exit()
 
 out = open("out.json", "w+")
+error = open("errors.txt", "w+")
+error_text = ''
 raw = list(csv.reader(open(arg)))
 
+define_labels(raw[1])
+
+#Clears out quotation marks and other unacceptable characters
 lines = []
+i = 0
 for line in raw:
+    i += 1
     templine = []
     for part in line:
         part = part.replace('"','')
         part = part.replace('\'','')
         templine.append(part)
-    lines.append(templine)
+    if not templine[name] == '' and not templine[addressLine]== '' and not templine[city] == '' and not templine[stateProvince]== '' and not templine[postalcode] == '' and not templine[description]== '' and not templine[quantity] == '' and not templine[packagingUnit]== '' and not templine[weight] == '' and not templine[weightUnit] == '':
+        lines.append(templine)
+        #print(str(i), templine[name])
+    elif templine[name] == '' and templine[addressLine]== '' and templine[city] == '' and templine[stateProvince]== '' and templine[postalcode] == '' and templine[description]== '' and templine[quantity] == '' and templine[packagingUnit]== '' and templine[weight] == '' and templine[weightUnit] == '':
+        #print(str(i), "[ERROR: EMPTY LINE]")
+        z = 0 # Empty line
+    else:
+        #print(str(i), "[ERROR: MISSING DATA]")
+        error_text = error_text + str(i) + " [ERROR: MISSING DATA]\n"
 
-define_labels(lines[1])
 del lines[0]
 del lines[0] #First two columns are labels
 
@@ -147,7 +151,7 @@ for consignee in consignees:
     for line in lines:
         if line[7] == consignee:
             #print(line[14])
-            out_text += ('\t\t\t\t{\n\t\t\t\t\t"description": "' + line[description] + '",\n\t\t\t\t\t"quantity": ' + line[quantity] + ',\n\t\t\t\t\t"packagingUnit": "' + line[packagingUnit] + '",\n\t\t\t\t\t"weight": "' + line[weight] + '",\n\t\t\t\t\t"weightUnit": "LBR"\n\t\t\t\t},\n')
+            out_text += ('\t\t\t\t{\n\t\t\t\t\t"description": "' + line[description] + '",\n\t\t\t\t\t"quantity": ' + line[quantity] + ',\n\t\t\t\t\t"packagingUnit": "' + line[packagingUnit] + '",\n\t\t\t\t\t"weight": "' + line[weight] + '",\n\t\t\t\t\t"weightUnit": "LBR",\n\t\t\t\t\t"marksAndNumbers": "' + line[marksAndNumbers] + '"\n\t\t\t\t},\n')
     out_text += ('\t\t\t],\n\t\t\t"autoSend": false\n\t\t},\n')
     i += 1
 out_text += ('\t],\n\t"autoSend": false\n}')
@@ -157,6 +161,8 @@ out_text = out_text.replace('},\n\t\t\t],','}\n\t\t\t],')
 out_text = out_text.replace('},\n\t],\n\t"autoSend": false\n}','}\n\t],\n\t"autoSend": false\n}')
 out_text = out_text.replace('\n",', '",')
 
-print(out_text)
+#print(out_text)
 out.write(out_text)
 out.close()
+error.write(error_text)
+error.close()
