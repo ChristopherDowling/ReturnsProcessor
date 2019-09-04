@@ -7,7 +7,7 @@ consignees = []
 consignees_full = []
 
 name           = 0
-addressline    = 0
+addressLine    = 0
 city           = 0
 stateProvince  = 0
 postalcode     = 0
@@ -47,7 +47,7 @@ def define_labels(line):
 
     global marksAndNumbers
     global name
-    global addressline
+    global addressLine
     global city
     global stateProvince
     global postalcode
@@ -65,7 +65,7 @@ def define_labels(line):
                 if part == "Consignee Name":
                     name = line.index(part)
                 if part == "Consignee Address1":
-                    addressline = line.index(part)
+                    addressLine = line.index(part)
                 if part == "Consignee City":
                     city = line.index(part)
                 if part == "Consignee Province":
@@ -115,10 +115,10 @@ for line in raw:
         part = part.replace('"','')
         part = part.replace('\'','')
         templine.append(part)
-    if not templine[name] == '' and not templine[addressline]== '' and not templine[city] == '' and not templine[stateProvince]== '' and not templine[postalcode] == '' and not templine[description]== '' and not templine[quantity] == '' and not templine[packagingUnit]== '' and not templine[weight] == '' and not templine[weightUnit] == '':
+    if not templine[name] == '' and not templine[addressLine]== '' and not templine[city] == '' and not templine[stateProvince]== '' and not templine[postalcode] == '' and not templine[description]== '' and not templine[quantity] == '' and not templine[packagingUnit]== '' and not templine[weight] == '' and not templine[weightUnit] == '':
         lines.append(templine)
         #print(str(i), templine[name])
-    elif templine[name] == '' and templine[addressline]== '' and templine[city] == '' and templine[stateProvince]== '' and templine[postalcode] == '' and templine[description]== '' and templine[quantity] == '' and templine[packagingUnit]== '' and templine[weight] == '' and templine[weightUnit] == '':
+    elif templine[name] == '' and templine[addressLine]== '' and templine[city] == '' and templine[stateProvince]== '' and templine[postalcode] == '' and templine[description]== '' and templine[quantity] == '' and templine[packagingUnit]== '' and templine[weight] == '' and templine[weightUnit] == '':
         #print(str(i), "[ERROR: EMPTY line]")
         z = 0 # Empty line
     else:
@@ -154,10 +154,10 @@ i = 0
 for consignee in consignees:
     index = consignees.index(consignee)
     # Per consignee, add shipment details
-    out_text += ('\t\t{\n\t\t\t"data": "ACI_SHIPMENT",\n\t\t\t"operation": "CREATE",\n\t\t\t"shipmentType": "PARS",\n\t\t\t"loadendOn": {\n\t\t\t\t"type": "TRUCK",\n\t\t\t\t"number": "327618"\n\t\t\t},\n\t\t\t"cargoControlNumber": "' + shipment + str(i+1).zfill(2) + '",\n\t\t\t"referenceOnlyShipment": false,\n\t\t\t"portOfEntry": "0427",\n\t\t\t"releaseOffice": "0427",\n\t\t\t"estimatedArrivalDate": "20' + date + ' 11:30:00",\n\t\t\t"estimatedArrivalTimeZone": "EST",\n\t\t\t"cityOfLoading": {\n\t\t\t\t"cityName": "Niagara Falls",\n\t\t\t\t"stateProvince": "NY"\n\t\t\t},\n\t\t\t"cityOfAcceptance": {\n\t\t\t\t"cityName": "Niagara Falls",\n\t\t\t\t"stateProvince": "NY"\n\t\t\t},\n\t\t\t"consolidatedFreight": false,\n\t\t\t"shipper": {\n\t\t\t\t"name": "Defranco Hardware",\n\t\t\t\t"address": {\n\t\t\t\t\t"addressline": "3105 Pine Ave",\n\t\t\t\t\t"city": "Niagara Falls",\n\t\t\t\t\t"stateProvince": "NY",\n\t\t\t\t\t"postalCode": "14301"\n\t\t\t\t},\n\t\t\t\t"contactNumber": "716-285-3393"\n\t\t\t},\n\t\t\t"consignee": {\n\t\t\t\t"name": "' + consignees_full[index][name] + '",\n\t\t\t\t"address": {\n\t\t\t\t\t"addressline": "' + consignees_full[index][addressline] + '",\n\t\t\t\t\t"city": "' + consignees_full[index][city] + '",\n\t\t\t\t\t"stateProvince": "' + consignees_full[index][stateProvince] + '",\n\t\t\t\t\t"postalCode": "' + consignees_full[index][postalcode] + '"\n\t\t\t\t}\n\t\t\t},\n\t\t\t"commodities": [\n')
+    out_text += ('\t\t{\n\t\t\t"data": "ACI_SHIPMENT",\n\t\t\t"operation": "CREATE",\n\t\t\t"shipmentType": "PARS",\n\t\t\t"loadendOn": {\n\t\t\t\t"type": "TRUCK",\n\t\t\t\t"number": "327618"\n\t\t\t},\n\t\t\t"cargoControlNumber": "' + shipment + str(i+1).zfill(2) + '",\n\t\t\t"referenceOnlyShipment": false,\n\t\t\t"portOfEntry": "0427",\n\t\t\t"releaseOffice": "0427",\n\t\t\t"estimatedArrivalDate": "20' + date + ' 11:30:00",\n\t\t\t"estimatedArrivalTimeZone": "EST",\n\t\t\t"cityOfLoading": {\n\t\t\t\t"cityName": "Niagara Falls",\n\t\t\t\t"stateProvince": "NY"\n\t\t\t},\n\t\t\t"cityOfAcceptance": {\n\t\t\t\t"cityName": "Niagara Falls",\n\t\t\t\t"stateProvince": "NY"\n\t\t\t},\n\t\t\t"consolidatedFreight": false,\n\t\t\t"shipper": {\n\t\t\t\t"name": "Defranco Hardware",\n\t\t\t\t"address": {\n\t\t\t\t\t"addressLine": "3105 Pine Ave",\n\t\t\t\t\t"city": "Niagara Falls",\n\t\t\t\t\t"stateProvince": "NY",\n\t\t\t\t\t"postalCode": "14301"\n\t\t\t\t},\n\t\t\t\t"contactNumber": "716-285-3393"\n\t\t\t},\n\t\t\t"consignee": {\n\t\t\t\t"name": "' + consignees_full[index][name] + '",\n\t\t\t\t"address": {\n\t\t\t\t\t"addressLine": "' + consignees_full[index][addressLine] + '",\n\t\t\t\t\t"city": "' + consignees_full[index][city] + '",\n\t\t\t\t\t"stateProvince": "' + consignees_full[index][stateProvince] + '",\n\t\t\t\t\t"postalCode": "' + consignees_full[index][postalcode] + '"\n\t\t\t\t}\n\t\t\t},\n\t\t\t"commodities": [\n')
     # Per consignee, creater a packign slip for them
     slip = open(slips_folder + consignee.replace('/', '') + ".rtf", "w+")
-    slip_text = '{\\rtf1\\ansi\\ansicpg1252\\deff0\\nouicompat\\deflang1033\\deflangfe1033{\\fonttbl{\\f0\\fnil\\fcharset0 Lucida Console;}}\\n{\\*\\generator Riched20 10.0.10586}{\\*\\mmathPr\\mdispDef1\\mwrapIndent1440 }\\viewkind4\\uc1 \\n\\pard\\nowidctlpar\\sa200\\sl276\\slmult1\\qr\\b\\f0\\fs40\\lang9 PACKING SLIP\\b0\\fs22\\par\\n 20' + str(date) + '\\par CID: ' + consignees_full[index][idNumber] + '\\b0\\fs22\\par\\n\\pard\\nowidctlpar\\sa200\\sl276\\slmult1 DeFranco Hardware\\line 3105 Pine Ave, Niagara Falls, NY, 14301\\line 1-877-863-7447\\par\\n SHIP TO:\\line ' + str(consignee) + '\\line ' + consignees_full[index][addressline] +' '+ consignees_full[index][addressline+1] + '\\line ' + consignees_full[index][addressline+2] + ', ' + consignees_full[index][addressline+3] + '\\line Canada\\par\\n ORDER DATE\\tab\\tab PURCHASE ORDER\\line 20' + str(date) + '\\tab\\tab ' + str(shipment) + str(index+1).zfill(2) + '\\par\\n ORDER Q#\\tab SHIP Q#\\tab ITEM\\line '
+    slip_text = '{\\rtf1\\ansi\\ansicpg1252\\deff0\\nouicompat\\deflang1033\\deflangfe1033{\\fonttbl{\\f0\\fnil\\fcharset0 Lucida Console;}}\\n{\\*\\generator Riched20 10.0.10586}{\\*\\mmathPr\\mdispDef1\\mwrapIndent1440 }\\viewkind4\\uc1 \\n\\pard\\nowidctlpar\\sa200\\sl276\\slmult1\\qr\\b\\f0\\fs40\\lang9 PACKING SLIP\\b0\\fs22\\par\\n 20' + str(date) + '\\par CID: ' + consignees_full[index][idNumber] + '\\b0\\fs22\\par\\n\\pard\\nowidctlpar\\sa200\\sl276\\slmult1 DeFranco Hardware\\line 3105 Pine Ave, Niagara Falls, NY, 14301\\line 1-877-863-7447\\par\\n SHIP TO:\\line ' + str(consignee) + '\\line ' + consignees_full[index][addressLine] +' '+ consignees_full[index][addressLine+1] + '\\line ' + consignees_full[index][addressLine+2] + ', ' + consignees_full[index][addressLine+3] + '\\line Canada\\par\\n ORDER DATE\\tab\\tab PURCHASE ORDER\\line 20' + str(date) + '\\tab\\tab ' + str(shipment) + str(index+1).zfill(2) + '\\par\\n ORDER Q#\\tab SHIP Q#\\tab ITEM\\line '
     
     total = 0
     total2 = 0
